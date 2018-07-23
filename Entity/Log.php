@@ -45,7 +45,7 @@ class Log
     /**
      * @var string
      *
-     * @ORM\Column(name="log", type="string", length=255, nullable=false)
+     * @ORM\Column(name="url", type="string", length=255, nullable=false)
      */
     private $url;
 

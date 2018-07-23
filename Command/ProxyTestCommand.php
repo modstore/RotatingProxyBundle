@@ -13,7 +13,7 @@ class ProxyTestCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('proxy:test')
+            ->setName('modstore_rotating_proxy:test')
             ->setDescription('Test a proxy request.')
             ->addOption('url', null, InputOption::VALUE_REQUIRED, 'The url for the request.')
         ;
