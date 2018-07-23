@@ -21,15 +21,18 @@ class ProxyTestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = $this->getContainer()->get('logger');
-
         $url = $input->getOption('url') ? $input->getOption('url') : 'http://whatismyip.org';
 
         $proxyManager = $this->getContainer()->get('modstore_rotating_proxy.manager');
         $proxyManager->setAttempts(1);
 
-        $crawler = $proxyManager->crawlPage($url, 'test', ['https://www.google.com.au/search?q=test&oq=test&sourceid=chrome&ie=UTF-8']);
+        $crawler = $proxyManager->crawlPage(
+            $url,
+            'test',
+            ['https://www.google.com.au/search?q=test&oq=test&sourceid=chrome&ie=UTF-8']
+        );
 
-        $output->writeln(print_r($crawler, true));
+        $text = preg_replace("/[\r\n]+/", "\n", $crawler->filter('body')->first()->text());
+        $output->writeln($text);
     }
 }

@@ -37,6 +37,8 @@ $crawler = $container->get('modstore_rotating_proxy.manager')->crawlPage(
     ['Referer' => 'https://www.google.com']
 );
 ```
+An instance of the Symfony dom crawler will be returned:
+https://symfony.com/doc/current/components/dom_crawler.html
 
 ## Notes
 In order to ensure requests aren't too similar and blocked as a bot, 
@@ -47,6 +49,18 @@ to the page you're requesting.
 The second argument is a group name. Requests are rotated within a group.
 Generally for all requests to a particular domain, you would set the same
 group name.
+
+## Test command
+There's a test command to see how it works and test your requests. The text
+from the body of the page will be output.
+```bash
+php bin/console modstore_rotating_proxy:test
+```
+Optionally a url can be provided:
+```bash
+php bin/console modstore_rotating_proxy:test --url='https://github.com/modstore/RotatingProxyBundle'
+```
+When the url argument is omitted, a request will be sent to whatsmyip.org.
 
 ## Log
 A log of all requests is stored in the modstore_rotating_proxy_log table.
