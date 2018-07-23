@@ -1,0 +1,5 @@
+services:
+    modstore_rotating_proxy.manager:
+        class: Modstore\RotatingProxyBundle\Service\RotatingProxyManager
+        arguments: ['@doctrine.orm.entity_manager', '@logger']
+        public: true
