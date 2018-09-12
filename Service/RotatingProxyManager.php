@@ -154,6 +154,11 @@ class RotatingProxyManager
             $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
             $group->addLog(new Log($url, $i, $client->getResponse()->getStatus()));
 
+            // The request was successful, but the response code isn't one that we can crawl.
+            if ($client->getResponse()->getStatus() == 404) {
+                throw new RotatingProxyResponseUnsuccessfulException($client->getResponse(), $client->getRequest());
+            }
+
             // If request failed, or we get the robot check page.
             if ($client->getResponse()->getStatus() < 200 || $client->getResponse()->getStatus() > 299) {
                 $this->requestFailed($group, $client->getResponse(), $client->getRequest());
