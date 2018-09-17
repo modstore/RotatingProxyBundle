@@ -206,7 +206,7 @@ class RotatingProxyManager
      */
     public function requestSuccessful(Group $group, Response $response, Request $request)
     {
-        $this->logger->notice('Rotating proxy successful: ' . $group->getProxy()->getId() . ' ' . $group->getName(), [
+        $this->logger->info('Rotating proxy successful: ' . $group->getProxy()->getId() . ' ' . $group->getName(), [
             'uri' => $request->getUri(),
             'status' => $response->getStatus(),
         ]);
