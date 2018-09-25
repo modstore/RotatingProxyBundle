@@ -14,6 +14,8 @@ class RotatingProxyResponseUnsuccessfulException extends RotatingProxyException
     public function __construct(Response $response, Request $request)
     {
         parent::__construct('Response : ' . $response->getStatus() . ' ' . $request->getUri());
+        $this->response = $response;
+        $this->request = $request;
     }
 
     public function getResponse()
