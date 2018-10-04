@@ -180,6 +180,66 @@ class RotatingProxyManager
     }
 
     /**
+     * Send a request with guzzle and return the response.
+     *
+     * @param $url
+     * @param string $name
+     * @param array $options
+     * @param string $method
+     * @param array $requestOptions
+     * @return null|ResponseInterface
+     * @throws RotatingProxyNoProxiesAvailableException
+     */
+    public function request($url, $name = 'default', array $options = [], $method = 'GET', array $requestOptions = [])
+    {
+        // Try up to x times.
+        $e = null;
+        for ($i = 0; $i < $this->attempts; $i++) {
+            // Get the next available proxy.
+            $proxy = $this->getNextProxy($name);
+
+            $config = [
+                'proxy' => $proxy->getUri(),
+                'headers' => [
+                    'User-Agent' => UserAgent::random(),
+                ],
+            ];
+
+            // TODO use a recursive merge function.
+            if (array_key_exists('headers', $options)) {
+                $config['headers'] += $options['headers'];
+            }
+
+            $client = GuzzleClient($config);
+
+            try {
+                $response = $client->request($method, $url, $requestOptions);
+            }
+            catch (RequestException $e) {
+                $this->logger->warning('Unable to send request through proxy: ' . $e->getMessage());
+                /** @var Group $group */
+                $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
+                $group->addLog(new Log($url, $i));
+
+                continue;
+            }
+
+            /** @var Group $group */
+            $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
+            $group->addLog(new Log($url, $i, $client->getResponse()->getStatus()));
+
+            return $response;
+        }
+
+        if ($e instanceof RequestException) {
+            throw $e;
+        }
+
+        // Request hasn't been successful after max attempts.
+        return null;
+    }
+
+    /**
      * Mark a request failed using this proxy. After 3 times it will be disabled.
      *
      * @param Group $group
