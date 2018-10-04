@@ -124,11 +124,13 @@ class RotatingProxyManager
      *
      * @param string $name
      * @param array $options - Guzzle client options.
+     * @param string $method
+     * @param array $requestOptions
      * @return \Symfony\Component\DomCrawler\Crawler|null
-     * @throws \Modstore\RotatingProxyBundle\Exception\RotatingProxyNoProxiesAvailableException
-     * @throws \Modstore\RotatingProxyBundle\Exception\RotatingProxyResponseUnsuccessfulException
+     * @throws RotatingProxyNoProxiesAvailableException
+     * @throws RotatingProxyResponseUnsuccessfulException
      */
-    public function crawlPage($url, $name = 'default', array $options = [])
+    public function crawlPage($url, $name = 'default', array $options = [], $method = 'GET', array $requestOptions = [])
     {
         // Try up to x times.
         $e = null;
@@ -139,7 +141,7 @@ class RotatingProxyManager
             $client = $this->getClient($proxy, $options);
 
             try {
-                $crawler = $client->request('GET', $url);
+                $crawler = $client->request($method, $url, $requestOptions);
             }
             catch (RequestException $e) {
                 $this->logger->warning('Unable to send request through proxy: ' . $e->getMessage());
