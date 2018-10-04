@@ -210,7 +210,7 @@ class RotatingProxyManager
                 $config['headers'] += $options['headers'];
             }
 
-            $client = GuzzleClient($config);
+            $client = new GuzzleClient($config);
 
             try {
                 $response = $client->request($method, $url, $requestOptions);
