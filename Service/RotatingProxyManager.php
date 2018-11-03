@@ -224,10 +224,6 @@ class RotatingProxyManager
                 continue;
             }
 
-            /** @var Group $group */
-            $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
-            $group->addLog(new Log($url, $i, $client->getResponse()->getStatus()));
-
             return $response;
         }
 
