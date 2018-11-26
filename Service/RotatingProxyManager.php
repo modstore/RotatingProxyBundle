@@ -104,6 +104,9 @@ class RotatingProxyManager
             'headers' => [
                 'User-Agent' => UserAgent::random(),
             ],
+            'connect_timeout' => 10,
+            'timeout' => 30,
+            'read_timeout' => 10,
         ];
 
         // TODO use a recursive merge function.
@@ -203,6 +206,9 @@ class RotatingProxyManager
                 'headers' => [
                     'User-Agent' => UserAgent::random(),
                 ],
+                'connect_timeout' => 10,
+                'timeout' => 30,
+                'read_timeout' => 10,
             ];
 
             // TODO use a recursive merge function.
