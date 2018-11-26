@@ -31,7 +31,7 @@ class Log
     /**
      * @var int
      *
-     * @ORM\Column(name="code", type="integer")
+     * @ORM\Column(name="code", type="integer", nullable=true)
      */
     private $code;
 
