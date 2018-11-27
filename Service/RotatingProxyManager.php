@@ -147,7 +147,7 @@ class RotatingProxyManager
                 $crawler = $client->request($method, $url, $requestOptions);
             }
             catch (RequestException $e) {
-                $this->logger->warning('Unable to send request through proxy: ' . $e->getMessage());
+                $this->logger->info('Unable to send request through proxy: ' . $e->getMessage());
                 /** @var Group $group */
                 $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
                 $group->addLog(new Log($url, $i));
@@ -222,7 +222,7 @@ class RotatingProxyManager
                 $response = $client->request($method, $url, $requestOptions);
             }
             catch (RequestException $e) {
-                $this->logger->warning('Unable to send request through proxy: ' . $e->getMessage());
+                $this->logger->info('Unable to send request through proxy: ' . $e->getMessage());
                 /** @var Group $group */
                 $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
                 $group->addLog(new Log($url, $i));
