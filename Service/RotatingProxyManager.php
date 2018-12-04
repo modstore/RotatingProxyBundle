@@ -223,9 +223,11 @@ class RotatingProxyManager
             }
             catch (RequestException $e) {
                 $this->logger->info('Unable to send request through proxy: ' . $e->getMessage());
-                /** @var Group $group */
-                $group = $this->em->getRepository('ModstoreRotatingProxyBundle:Group')->findOneByProxyAndName($proxy, $name);
-                $group->addLog(new Log($url, $i));
+
+                // If this is a 404 for example, don't try again.
+                if (null !== $e->getResponse() && $this->isNotAvailable($e->getResponse()->getStatusCode())) {
+                    throw $e;
+                }
 
                 continue;
             }
@@ -239,6 +241,17 @@ class RotatingProxyManager
 
         // Request hasn't been successful after max attempts.
         return null;
+    }
+
+    /**
+     * Check if the status code means this page isn't available.
+     *
+     * @param $statusCode
+     * @return bool
+     */
+    protected function isNotAvailable($statusCode)
+    {
+        return 404 === $statusCode || 410 === $statusCode;
     }
 
     /**
