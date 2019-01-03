@@ -190,7 +190,7 @@ class RotatingProxyManager
      * @param array $options
      * @param string $method
      * @param array $requestOptions
-     * @return null|ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface|null
      * @throws RotatingProxyNoProxiesAvailableException
      */
     public function request($url, $name = 'default', array $options = [], $method = 'GET', array $requestOptions = [])
@@ -211,10 +211,7 @@ class RotatingProxyManager
                 'read_timeout' => 10,
             ];
 
-            // TODO use a recursive merge function.
-            if (array_key_exists('headers', $options)) {
-                $config['headers'] += $options['headers'];
-            }
+            $config = array_replace_recursive($config, $options);
 
             $client = new GuzzleClient($config);
 
